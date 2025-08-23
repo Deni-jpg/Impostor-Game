@@ -9,20 +9,24 @@
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
 
 <main class="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
-  <h1 class="text-3xl font-bold mb-6">🎮 Criar Sala</h1>
+  <h1 class="text-3xl font-bold mb-6">Criar Sala 🎮</h1>
 
   <form id="form-sala" class="space-y-5">
     <input type="text" id="Palavra" placeholder="Palavra secreta" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
     <input type="number" id="Quantidade" placeholder="Número de jogadores" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" min="4" required>
     <input type="number" id="Impostores" placeholder="Número de impostores" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" min="1" required>
-    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition">Criar Sala</button>
+    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition">Avançar para o Lobby 🚪</button>
   </form>
 
   <div id="sala-info" class="mt-6 hidden">
     <p class="mb-2 text-lg">Código da Sala: <span id="codigo-sala" class="font-bold"></span></p>
     <p class="mb-2">Jogadores que entraram:</p>
     <ul id="lista-jogadores" class="mb-4 list-disc list-inside text-left"></ul>
-    <button id="atualizar-btn" class="w-full py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold">Atualizar lista</button>
+
+    <div class="space-y-2">
+      <button id="atualizar-btn" class="w-full py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold">Atualizar lista 🆕</button>
+      <button id="excluir-btn" class="w-full py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold">Excluir Sala 🗑️</button>
+    </div>
   </div>
 </main>
 
@@ -37,6 +41,7 @@
   const codigoSpan = document.getElementById("codigo-sala");
   const listaJogadores = document.getElementById("lista-jogadores");
   const atualizarBtn = document.getElementById("atualizar-btn");
+  const excluirBtn = document.getElementById("excluir-btn");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -48,8 +53,8 @@
     salaCode = Math.random().toString(36).substring(2,8).toUpperCase();
     palavraSala = palavra;
 
-    // Cria a sala no Supabase
-    const { error } = await supabase.from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }])
+    // cria a sala lá no supabase
+    const { error } = await supabase.from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }]);
     if(error){ alert("Erro ao criar sala: " + error.message); return }
 
     form.style.display = "none";
@@ -59,7 +64,7 @@
     await atualizarLista();
   });
 
-  // Função que busca jogadores e atualiza a lista
+  // funçao que busca jogadores e atualiza a lista
   async function atualizarLista(){
     if(!salaCode) return;
     const { data, error } = await supabase
@@ -82,6 +87,20 @@
   }
 
   atualizarBtn.addEventListener("click", atualizarLista);
+
+  // exclui a sala paezao
+  excluirBtn.addEventListener("click", async () => {
+    if(!salaCode) return;
+    const confirma = confirm("Tem certeza que quer excluir a sala?");
+    if(!confirma) return;
+
+    await supabase.from('jogadores').delete().eq('codigo_sala', salaCode);
+    await supabase.from('salas').delete().eq('codigo', salaCode);
+
+    alert("Sala excluída!");
+    window.location.href = "index.html";
+  });
 </script>
+
 </body>
 </html>
