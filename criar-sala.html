@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Sala - Jogo do Impostor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
+
+<main class="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
+  <h1 class="text-3xl font-bold mb-6">🎮 Criar Sala</h1>
+
+  <form id="form-sala" class="space-y-5">
+    <input type="text" id="Palavra" placeholder="Palavra secreta" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
+    <input type="number" id="Quantidade" placeholder="Número de jogadores" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" min="4" required>
+    <input type="number" id="Impostores" placeholder="Número de impostores" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" min="1" required>
+    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition">Criar Sala</button>
+  </form>
+
+  <div id="sala-info" class="mt-6 hidden">
+    <p class="mb-2 text-lg">Código da Sala: <span id="codigo-sala" class="font-bold"></span></p>
+    <p class="mb-2">Jogadores que entraram:</p>
+    <ul id="lista-jogadores" class="mb-4 list-disc list-inside text-left"></ul>
+    <button id="atualizar-btn" class="w-full py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold">Atualizar lista</button>
+  </div>
+</main>
+
+<script type="module">
+  import { supabase } from './js/supabaseClient.js';
+
+  let salaCode;
+  let palavraSala;
+
+  const form = document.getElementById("form-sala");
+  const salaInfo = document.getElementById("sala-info");
+  const codigoSpan = document.getElementById("codigo-sala");
+  const listaJogadores = document.getElementById("lista-jogadores");
+  const atualizarBtn = document.getElementById("atualizar-btn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const palavra = document.getElementById("Palavra").value.trim();
+    const quantidade = parseInt(document.getElementById("Quantidade").value);
+    const impostores = parseInt(document.getElementById("Impostores").value);
+
+    salaCode = Math.random().toString(36).substring(2,8).toUpperCase();
+    palavraSala = palavra;
+
+    // Cria a sala no Supabase
+    const { error } = await supabase.from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }])
+    if(error){ alert("Erro ao criar sala: " + error.message); return }
+
+    form.style.display = "none";
+    salaInfo.classList.remove("hidden");
+    codigoSpan.textContent = salaCode;
+
+    await atualizarLista();
+  });
+
+  // Função que busca jogadores e atualiza a lista
+  async function atualizarLista(){
+    if(!salaCode) return;
+    const { data, error } = await supabase
+      .from('jogadores')
+      .select('*')
+      .eq('codigo_sala', salaCode)
+      .order('id', { ascending: true });
+    if(error){ console.log(error); return; }
+
+    listaJogadores.innerHTML = '';
+    data.forEach(jogador => {
+      const li = document.createElement("li");
+      if(jogador.role === "impostor"){
+        li.innerHTML = `${jogador.nome} - <span class="text-red-500 font-bold">IMPOSTOR</span>`;
+      } else {
+        li.innerHTML = `${jogador.nome} - <span class="text-blue-400 font-semibold">${palavraSala}</span>`;
+      }
+      listaJogadores.appendChild(li);
+    });
+  }
+
+  atualizarBtn.addEventListener("click", atualizarLista);
+</script>
+</body>
+</html>

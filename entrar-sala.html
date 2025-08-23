@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar na Sala - Jogo do Impostor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
+
+  <main class="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
+    <h1 class="text-3xl font-bold mb-6">🔑 Entrar na Sala</h1>
+
+    <form id="form-join" class="space-y-5">
+      <input type="text" id="nome" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
+      <input type="text" id="sala" placeholder="Código da sala" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
+      <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition">Entrar</button>
+    </form>
+  </main>
+
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js'
+
+    const formJoin = document.getElementById("form-join");
+
+    formJoin.addEventListener("submit", async function(e){
+      e.preventDefault();
+      const nome = document.getElementById("nome").value.trim();
+      const salaCode = document.getElementById("sala").value.trim().toUpperCase();
+
+      const { data: sala, error: salaError } = await supabase.from('salas').select('*').eq('codigo', salaCode).single()
+      if(salaError || !sala){ alert("Sala não encontrada!"); return }
+
+      // Contar impostores já distribuídos
+      const { data: jogadores } = await supabase.from('jogadores').select('*').eq('codigo_sala', salaCode)
+      const impostoresDistribuidos = jogadores.filter(j => j.role === "impostor").length
+      let role
+      if(impostoresDistribuidos < sala.impostores){
+        const remaining = sala.quantidade - jogadores.length
+        const impostoresLeft = sala.impostores - impostoresDistribuidos
+        role = Math.random() < (impostoresLeft / remaining) ? "impostor" : "palavra"
+      } else {
+        role = "palavra"
+      }
+
+      // Adiciona jogador
+      const { error } = await supabase.from('jogadores').insert([{ nome, codigo_sala: salaCode, role }])
+      if(error) { alert("Erro ao entrar: " + error.message); return }
+
+      window.location.href = `jogo.html?codigo=${salaCode}&nome=${encodeURIComponent(nome)}`
+    })
+  </script>
+</body>
+</html>
