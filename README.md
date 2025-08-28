@@ -2,6 +2,9 @@
 
 A simple web game to play with friends, built with HTML, JavaScript, Tailwind CSS, and Supabase.
 
+You can play my game <a href="http://jogodogc.netlify.app" target="_blank" rel="noopener noreferrer">here</a>!
+
+
 This project was inspired by my group of friends at church. We used to play this game with paper, and they suggested I create a website for it. That's how this idea came to life! Feel free to contribute to the game :)
 
 ## How to Play
