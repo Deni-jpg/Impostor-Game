@@ -4,22 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrar na Sala - Jogo do Impostor</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>"></link>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
 
-  <main class="w-full max-w-md bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
-    <h1 class="text-3xl font-bold mb-6">Entrar na Sala 🔑</h1>
+  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
+    <div class="w-full bg-gray-800 p-8 rounded-2xl shadow-lg text-center border border-gray-700">
+      <h1 class="text-3xl font-bold mb-6">Entrar na Sala 🔑</h1>
 
-    <form id="form-join" class="space-y-5">
-      <input type="text" id="nome" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
-      <input type="text" id="sala" placeholder="Código da sala" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600" required>
-      <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition">Entrar</button>
-    </form>
+      <form id="form-join" class="space-y-5">
+        <input type="text" id="nome" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500" required>
+        <input type="text" id="sala" placeholder="Código da sala" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500" required>
+        
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
+          Entrar 🚀
+        </button>
+      </form>
+      
+      <p class="mt-4 text-sm text-gray-500 italic">Peça o código para quem criou a sala.</p>
+    </div>
   </main>
+
+  <footer class="w-full py-6 border-t border-gray-800 text-center">
+    <div class="flex flex-col items-center gap-2">
+      <p class="text-gray-500 text-xs">
+        &copy; 2026 Jogo do Impostor - Diversão entre amigos.
+      </p>
+      <div class="flex gap-4">
+        <a href="index.html" class="text-gray-400 hover:text-white text-xs transition">Início</a>
+        <a href="privacidade.html" class="text-gray-400 hover:text-white text-xs transition border-l border-gray-700 pl-4">Política de Privacidade</a>
+      </div>
+    </div>
+  </footer>
 
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
@@ -34,10 +52,10 @@
       const { data: sala, error: salaError } = await supabase.from('salas').select('*').eq('codigo', salaCode).single()
       if(salaError || !sala){ alert("Sala não encontrada!"); return }
 
-      // conta os impostores já escolhidos
       const { data: jogadores } = await supabase.from('jogadores').select('*').eq('codigo_sala', salaCode)
       const impostoresDistribuidos = jogadores.filter(j => j.role === "impostor").length
       let role
+      
       if(impostoresDistribuidos < sala.impostores){
         const remaining = sala.quantidade - jogadores.length
         const impostoresLeft = sala.impostores - impostoresDistribuidos
@@ -46,7 +64,6 @@
         role = "palavra"
       }
 
-      // adiciona jogadô
       const { error } = await supabase.from('jogadores').insert([{ nome, codigo_sala: salaCode, role }])
       if(error) { alert("Erro ao entrar: " + error.message); return }
 

@@ -4,17 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jogo do Impostor</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>"></link>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
-  <main class="w-full max-w-md text-center px-4">
-    <h1 class="text-3xl font-bold mb-2">Jogo do Impostor 🕵️‍♂️</h1>
-    <p class="text-gray-400 mb-6">Desenvolvido por <a href="https://linktr.ee/deni.jpg" target="_blank" class="animate-[pulse_1s_ease-in-out_infinite] text-blue-400">Daniel Coelho</a></p>
 
-    <div class="bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4">
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
+  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-2 text-center">Jogo do Impostor 🕵️‍♂️</h1>
+    <p class="text-gray-400 mb-6 text-center">Desenvolvido por <a href="https://linktr.ee/deni.jpg" target="_blank" class="animate-[pulse_1s_ease-in-out_infinite] text-blue-400">Daniel Coelho</a></p>
+
+    <div class="text-sm text-gray-400 mb-6 text-left bg-gray-800/50 p-4 rounded-xl">
+      <p>O Jogo do Impostor é um jogo de dedução social para jogar com amigos. Alguém recebeu a palavra secreta e o impostor precisa descobrir qual é antes de ser desmascarado!</p>
+    </div>
+
+    <div class="bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 w-full text-center">
       <button id="btn-create" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition">
         Criar sala ➕
       </button>
@@ -25,9 +29,20 @@
     </div>
   </main>
 
+  <footer class="w-full py-6 border-t border-gray-800 text-center">
+    <div class="flex flex-col items-center gap-2">
+      <p class="text-gray-500 text-xs">
+        &copy; 2026 Jogo do Impostor - Diversão entre amigos.
+      </p>
+      <div class="flex gap-4">
+        <a href="privacidade.html" class="text-gray-400 hover:text-white text-xs transition">Política de Privacidade</a>
+      </div>
+    </div>
+  </footer>
+
 <script type="module">
   document.getElementById("btn-create").addEventListener("click", () => {
-    window.location.href = "./criar-sala.html"; // O "./" ajuda o Vite a se localizar
+    window.location.href = "./criar-sala.html";
   });
 
   document.getElementById("btn-join").addEventListener("click", () => {
