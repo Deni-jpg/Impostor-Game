@@ -24,13 +24,13 @@
   </main>
 
 <script type="module">
-  document.getElementById("btn-create").addEventListener("click", async () => {
-    window.location.href = "criar-sala.html"
-  })
+  document.getElementById("btn-create").addEventListener("click", () => {
+    window.location.href = "./criar-sala.html"; // O "./" ajuda o Vite a se localizar
+  });
 
-  document.getElementById("btn-join").addEventListener("click", async () => {
-    window.location.href = "entrar-sala.html"
-  })
+  document.getElementById("btn-join").addEventListener("click", () => {
+    window.location.href = "./entrar-sala.html";
+  });
 </script>
 </body>
 </html>
