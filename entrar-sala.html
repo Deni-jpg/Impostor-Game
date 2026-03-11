@@ -8,30 +8,27 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-[100dvh]">
 
-  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
+  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 py-8">
     <div class="w-full bg-gray-800 p-8 rounded-2xl shadow-lg text-center border border-gray-700">
       <h1 class="text-3xl font-bold mb-6">Entrar na Sala 🔑</h1>
 
       <form id="form-join" class="space-y-5">
         <input type="text" id="nome" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500" required>
         <input type="text" id="sala" placeholder="Código da sala" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500" required>
-        
         <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
           Entrar 🚀
         </button>
       </form>
-      
+
       <p class="mt-4 text-sm text-gray-500 italic">Peça o código para quem criou a sala.</p>
     </div>
   </main>
 
   <footer class="w-full py-6 border-t border-gray-800 text-center">
     <div class="flex flex-col items-center gap-2">
-      <p class="text-gray-500 text-xs">
-        &copy; 2026 Jogo do Impostor - Diversão entre amigos.
-      </p>
+      <p class="text-gray-500 text-xs">&copy; 2026 Jogo do Impostor - Diversão entre amigos.</p>
       <div class="flex gap-4">
         <a href="index.html" class="text-gray-400 hover:text-white text-xs transition">Início</a>
         <a href="privacidade.html" class="text-gray-400 hover:text-white text-xs transition border-l border-gray-700 pl-4">Política de Privacidade</a>
@@ -46,33 +43,32 @@
 
     formJoin.addEventListener("submit", async function(e){
       e.preventDefault();
-      const nome = document.getElementById("nome").value.trim();
+      const nome     = document.getElementById("nome").value.trim();
       const salaCode = document.getElementById("sala").value.trim().toUpperCase();
 
-      const { data: sala, error: salaError } = await supabase.from('salas').select('*').eq('codigo', salaCode).single()
-      if(salaError || !sala){ alert("Sala não encontrada!"); return }
+      const { data: sala, error: salaError } = await supabase.from('salas').select('*').eq('codigo', salaCode).single();
+      if (salaError || !sala) { alert("Sala não encontrada!"); return; }
 
-      const { data: jogadores } = await supabase.from('jogadores').select('*').eq('codigo_sala', salaCode)
-      const impostoresDistribuidos = jogadores.filter(j => j.role === "impostor").length
-      let role
-      
-      if(impostoresDistribuidos < sala.impostores){
-        const remaining = sala.quantidade - jogadores.length
-        const impostoresLeft = sala.impostores - impostoresDistribuidos
-        role = Math.random() < (impostoresLeft / remaining) ? "impostor" : "palavra"
+      const { data: jogadores } = await supabase.from('jogadores').select('*').eq('codigo_sala', salaCode);
+      const impostoresDistribuidos = jogadores.filter(j => j.role === "impostor").length;
+      let role;
+
+      if (impostoresDistribuidos < sala.impostores) {
+        const remaining     = sala.quantidade - jogadores.length;
+        const impostoresLeft = sala.impostores - impostoresDistribuidos;
+        role = Math.random() < (impostoresLeft / remaining) ? "impostor" : "palavra";
       } else {
-        role = "palavra"
+        role = "palavra";
       }
 
-      const { error } = await supabase.from('jogadores').insert([{ nome, codigo_sala: salaCode, role }])
-      if(error) { alert("Erro ao entrar: " + error.message); return }
+      const { error } = await supabase.from('jogadores').insert([{ nome, codigo_sala: salaCode, role }]);
+      if (error) { alert("Erro ao entrar: " + error.message); return; }
 
-      // Salva no sessionStorage antes de redirecionar → sobrevive a refreshes
       sessionStorage.setItem("impostor_sala", salaCode);
       sessionStorage.setItem("impostor_nome", nome);
 
-      window.location.href = `jogo.html?codigo=${salaCode}&nome=${encodeURIComponent(nome)}`
-    })
+      window.location.href = `jogo.html?codigo=${salaCode}&nome=${encodeURIComponent(nome)}`;
+    });
   </script>
 </body>
 </html>

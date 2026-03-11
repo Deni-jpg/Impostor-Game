@@ -8,9 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-[100dvh]">
 
-  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
+  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 py-8">
     <div class="w-full bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
       <h1 class="text-3xl font-bold mb-6">Jogo do Impostor 🕵️‍♂️</h1>
       <p id="player-role" class="text-2xl font-semibold mb-6">Carregando...</p>
@@ -28,9 +28,7 @@
 
   <footer class="w-full py-6 border-t border-gray-800 text-center">
     <div class="flex flex-col items-center gap-2">
-      <p class="text-gray-500 text-xs">
-        &copy; 2026 Jogo do Impostor - Diversão entre amigos.
-      </p>
+      <p class="text-gray-500 text-xs">&copy; 2026 Jogo do Impostor - Diversão entre amigos.</p>
       <div class="flex gap-4">
         <a href="index.html" class="text-gray-400 hover:text-white text-xs transition">Início</a>
         <a href="privacidade.html" class="text-gray-400 hover:text-white text-xs transition border-l border-gray-700 pl-4">Política de Privacidade</a>
@@ -43,24 +41,20 @@
 
     const roleDisplay = document.getElementById("player-role");
 
-    // Tenta pegar da URL primeiro (navegação normal)
     const params = new URLSearchParams(window.location.search);
     let salaCode = params.get("codigo");
-    let nome = params.get("nome");
+    let nome     = params.get("nome");
 
-    // Se não tiver na URL (ex: refresh sem query string), tenta o sessionStorage
     if (!salaCode || !nome) {
       salaCode = sessionStorage.getItem("impostor_sala");
       nome     = sessionStorage.getItem("impostor_nome");
     }
 
-    // Se veio da URL, salva no sessionStorage para sobreviver a futuros refreshes
     if (salaCode && nome) {
       sessionStorage.setItem("impostor_sala", salaCode);
       sessionStorage.setItem("impostor_nome", nome);
     }
 
-    // Sem dados de jeito nenhum → volta para o início
     if (!salaCode || !nome) {
       alert("Sessão expirada. Voltando ao início.");
       window.location.href = "index.html";
@@ -68,12 +62,9 @@
 
     async function carregarJogador() {
       const { data: jogador } = await supabase
-        .from('jogadores').select('*')
-        .eq('codigo_sala', salaCode).eq('nome', nome).single();
-
+        .from('jogadores').select('*').eq('codigo_sala', salaCode).eq('nome', nome).single();
       const { data: sala } = await supabase
-        .from('salas').select('*')
-        .eq('codigo', salaCode).single();
+        .from('salas').select('*').eq('codigo', salaCode).single();
 
       if (!jogador || !sala) {
         alert("Sala não encontrada ou expirada. Voltando ao início.");
