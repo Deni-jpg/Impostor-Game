@@ -3,51 +3,226 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jogo do Impostor</title>
+  <title>Jogo do Impostor 🕵️ – Jogo de Dedução Social para Jogar com Amigos</title>
+  <meta name="description" content="O Jogo do Impostor é um jogo de dedução social gratuito para jogar com amigos. Crie uma sala, distribua palavras secretas e descubra quem é o impostor!" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
-  <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4">
-    <h1 class="text-3xl font-bold mb-2 text-center">Jogo do Impostor 🕵️‍♂️</h1>
-    <p class="text-gray-400 mb-6 text-center">Desenvolvido por <a href="https://linktr.ee/deni.jpg" target="_blank" class="animate-[pulse_1s_ease-in-out_infinite] text-blue-400">Daniel Coelho</a></p>
 
-    <div class="text-sm text-gray-400 mb-6 text-left bg-gray-800/50 p-4 rounded-xl">
-      <p>O Jogo do Impostor é um jogo de dedução social para jogar com amigos. Alguém recebeu a palavra secreta e o impostor precisa descobrir qual é antes de ser desmascarado!</p>
+  <main class="flex-grow w-full max-w-2xl mx-auto px-4 py-10 flex flex-col gap-8">
+
+    <!-- HERO -->
+    <div class="flex flex-col items-center text-center gap-3">
+      <h1 class="text-3xl font-bold">Jogo do Impostor 🕵️‍♂️</h1>
+      <p class="text-gray-400 text-sm">Desenvolvido por
+        <a href="https://linktr.ee/deni.jpg" target="_blank" class="text-blue-400 animate-[pulse_1s_ease-in-out_infinite]">Daniel Coelho</a>
+      </p>
+      <p class="text-gray-400 text-sm max-w-md">
+        Um jogo de dedução social para jogar com amigos. Todos recebem a palavra secreta — exceto o impostor, que precisa se disfarçar e não ser desmascarado!
+      </p>
     </div>
 
+    <!-- BOTÕES PRINCIPAIS -->
     <div class="bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 w-full text-center">
       <button id="btn-create" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition">
         Criar sala ➕
       </button>
-
       <button id="btn-join" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-xl font-medium transition">
         Entrar em sala 🔑
       </button>
     </div>
+
+    <!-- O QUE É O JOGO -->
+    <div class="bg-gray-800/50 rounded-2xl p-6 space-y-3">
+      <h2 class="text-xl font-bold">O que é o Jogo do Impostor?</h2>
+      <p class="text-gray-400 text-sm leading-relaxed">
+        O Jogo do Impostor é um jogo de dedução social criado para momentos de diversão presencial. Um jogador (ou mais) recebe o papel de impostor — ele sabe que é o infiltrado, mas não sabe qual é a palavra secreta da rodada. Os outros jogadores conhecem a palavra e precisam dar dicas sobre ela sem entregá-la de bandeja para o impostor.
+      </p>
+      <p class="text-gray-400 text-sm leading-relaxed">
+        Durante a partida, cada pessoa diz em voz alta uma dica sobre a palavra. O impostor ouve tudo e tenta inventar uma dica que faça sentido, fingindo que também conhece o tema. No final, o grupo discute e vota em quem acredita ser o infiltrado. Se acertarem, os jogadores normais vencem. Se o impostor escapar da votação, ele ainda pode tentar adivinhar a palavra — se acertar, vence sozinho!
+      </p>
+      <p class="text-gray-400 text-sm leading-relaxed">
+        O jogo foi inspirado em brincadeiras de papel que o criador fazia com amigos da igreja, e foi desenvolvido para que qualquer grupo possa jogar usando apenas o celular — sem precisar instalar nada, sem cadastro e totalmente de graça.
+      </p>
+    </div>
+
+    <!-- COMO JOGAR -->
+    <div class="bg-gray-800/50 rounded-2xl p-6 space-y-4">
+      <h2 class="text-xl font-bold">Como jogar com seus amigos 📋</h2>
+      <p class="text-gray-400 text-sm">Siga o passo a passo abaixo. É rápido e não precisa de nada além de um celular por pessoa.</p>
+
+      <ol class="space-y-3 text-sm text-gray-300">
+        <li class="flex gap-3">
+          <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold shrink-0 mt-0.5">1</span>
+          <div>
+            <span class="font-semibold text-white">O anfitrião cria a sala:</span> clique em "Criar Sala", escolha a palavra secreta, o número de jogadores e quantos impostores haverá. O sistema gera um código único de 4 letras para compartilhar com o grupo.
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold shrink-0 mt-0.5">2</span>
+          <div>
+            <span class="font-semibold text-white">Os jogadores entram na sala:</span> cada pessoa acessa o site no próprio celular, clica em "Entrar em Sala" e digita o código compartilhado pelo anfitrião, junto com o seu apelido.
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold shrink-0 mt-0.5">3</span>
+          <div>
+            <span class="font-semibold text-white">As funções são reveladas:</span> cada celular mostra individualmente se o jogador recebeu a palavra secreta ou se é o impostor. Ninguém mostra a tela para os outros!
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold shrink-0 mt-0.5">4</span>
+          <div>
+            <span class="font-semibold text-white">O jogo começa em pessoa:</span> cada jogador diz uma dica sobre a palavra. O impostor tenta inventar algo convincente. Depois de todos falarem, o grupo discute e vota no suspeito.
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold shrink-0 mt-0.5">5</span>
+          <div>
+            <span class="font-semibold text-white">Reinicie e jogue de novo:</span> o anfitrião pode reiniciar a sala com uma nova palavra. As rodadas são rápidas — dá para jogar várias numa mesma noite sem perder o ritmo.
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- dicas -->
+    <div class="bg-gray-800/50 rounded-2xl p-6 space-y-4">
+      <h2 class="text-xl font-bold">Dicas para se destacar no jogo 🧠</h2>
+
+      <div class="space-y-3 text-sm">
+        <div class="bg-gray-800 rounded-xl p-4">
+          <p class="font-semibold text-white mb-1">🦊 Para o impostor: seja genérico com confiança</p>
+          <p class="text-gray-400">O maior erro do impostor é tentar ser específico e acabar errando. Dicas vagas ditas com segurança passam muito bem. Frases como "todo mundo conhece isso" ou "faz parte do dia a dia" são difíceis de refutar e não expõem o impostor.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4">
+          <p class="font-semibold text-white mb-1">🔎 Observe a hesitação dos outros</p>
+          <p class="text-gray-400">Impostores tendem a pausar antes de falar, dar dicas muito vagas ou parecer animados demais ao ouvir as dicas alheias — porque estão coletando informação. Fique atento ao comportamento, não só às palavras.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4">
+          <p class="font-semibold text-white mb-1">🎭 Para o impostor: use as dicas que já ouviu</p>
+          <p class="text-gray-400">Se você falar depois de outros jogadores, use as dicas que já foram ditas para construir a sua. Reformular elegantemente uma dica alheia pode salvar sua vida na votação sem levantar suspeitas.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4">
+          <p class="font-semibold text-white mb-1">🗣️ Na discussão, faça perguntas ao invés de acusar</p>
+          <p class="text-gray-400">Pergunte ao suspeito por que ele escolheu aquela dica específica. Impostores geralmente não têm uma justificativa sólida e a explicação acaba revelando a inconsistência sem que você precise acusar diretamente.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4">
+          <p class="font-semibold text-white mb-1">🔄 Varie a ordem de fala entre rodadas</p>
+          <p class="text-gray-400">Falar primeiro é desvantagem para o impostor (não ouviu nenhuma dica ainda). Falar por último é vantagem (ouviu tudo). Alterne a ordem a cada rodada para equilibrar o jogo e não favorecer sempre as mesmas posições.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATUALIZAÇÕES -->
+    <div class="bg-gray-800/50 rounded-2xl p-6 space-y-4">
+      <h2 class="text-xl font-bold">Novidades e atualizações 🗞️</h2>
+
+      <div class="space-y-3 text-sm">
+        <div class="bg-gray-800 rounded-xl p-4 space-y-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">Novo</span>
+            <span class="text-gray-500 text-xs">Março 2026</span>
+          </div>
+          <p class="font-semibold text-white">Página principal reformulada</p>
+          <p class="text-gray-400">A home ganhou seções de Como Jogar, dicas estratégicas, FAQ e histórico de atualizações para que novos jogadores entendam o jogo antes de criar a primeira sala.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4 space-y-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">Novo</span>
+            <span class="text-gray-500 text-xs">Fevereiro 2026</span>
+          </div>
+          <p class="font-semibold text-white">Salas em tempo real com Supabase</p>
+          <p class="text-gray-400">A lista de jogadores agora é atualizada automaticamente assim que cada pessoa entra na sala — sem precisar recarregar a página. Isso elimina a confusão no início das partidas com grupos grandes.</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-4 space-y-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">Fix</span>
+            <span class="text-gray-500 text-xs">Dezembro 2025</span>
+          </div>
+          <p class="font-semibold text-white">Correção no botão de reiniciar partida</p>
+          <p class="text-gray-400">Resolvido o bug que impedia o anfitrião de reiniciar a sala corretamente em alguns casos. O botão "Reiniciar Jogo" agora limpa todos os dados e permite iniciar uma nova rodada sem criar um novo código.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="bg-gray-800/50 rounded-2xl p-6 space-y-3">
+      <h2 class="text-xl font-bold">Perguntas frequentes ❓</h2>
+
+      <div class="space-y-2 text-sm">
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            O jogo é gratuito?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">Sim, 100% gratuito e sem cadastro. Basta acessar pelo celular ou computador, criar ou entrar em uma sala e jogar. Não há limite de partidas nem de jogadores por sala.</p>
+        </details>
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            Quantas pessoas podem jogar?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">O jogo funciona melhor com 4 a 12 jogadores. Com menos de 4 fica fácil demais identificar o impostor. O ponto ideal é entre 6 e 10 pessoas para manter a discussão interessante sem ficar caótica.</p>
+        </details>
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            Precisa de internet durante a partida?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">Apenas para criar ou entrar na sala e receber o papel. Depois disso o jogo acontece em pessoa, sem precisar do celular. A internet é necessária de novo só se o anfitrião quiser reiniciar a sala para uma nova rodada.</p>
+        </details>
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            Quantos impostores devo colocar?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">1 impostor para grupos de até 5 pessoas e 2 impostores para grupos de 6 ou mais. Evite colocar impostores demais — quando são maioria, o jogo perde o equilíbrio e fica frustrante para os jogadores normais.</p>
+        </details>
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            Funciona no celular?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">Sim! O site foi desenvolvido com foco em dispositivos móveis e funciona em qualquer smartphone — Android ou iPhone — em qualquer navegador moderno. Sem precisar instalar nenhum aplicativo.</p>
+        </details>
+
+        <details class="bg-gray-800 rounded-xl overflow-hidden group">
+          <summary class="flex justify-between items-center p-4 cursor-pointer font-semibold text-white list-none">
+            Posso jogar com pessoas em lugares diferentes?
+            <span class="text-blue-400 text-lg transition-transform duration-200 group-open:rotate-45 inline-block">+</span>
+          </summary>
+          <p class="text-gray-400 px-4 pb-4">Tecnicamente sim, já que o sistema de salas funciona com qualquer dispositivo conectado. Porém, o jogo foi projetado para ser jogado presencialmente — a graça está em observar as reações e a linguagem corporal dos outros. Para jogar à distância, recomendamos usar uma chamada de vídeo em paralelo.</p>
+        </details>
+
+      </div>
+    </div>
+
   </main>
 
   <footer class="w-full py-6 border-t border-gray-800 text-center">
     <div class="flex flex-col items-center gap-2">
-      <p class="text-gray-500 text-xs">
-        &copy; 2026 Jogo do Impostor - Diversão entre amigos.
-      </p>
+      <p class="text-gray-500 text-xs">&copy; 2026 Jogo do Impostor - Diversão entre amigos.</p>
       <div class="flex gap-4">
         <a href="privacidade.html" class="text-gray-400 hover:text-white text-xs transition">Política de Privacidade</a>
       </div>
     </div>
   </footer>
 
-<script type="module">
-  document.getElementById("btn-create").addEventListener("click", () => {
-    window.location.href = "./criar-sala.html";
-  });
-
-  document.getElementById("btn-join").addEventListener("click", () => {
-    window.location.href = "./entrar-sala.html";
-  });
-</script>
+  <script type="module">
+    document.getElementById("btn-create").addEventListener("click", () => {
+      window.location.href = "./criar-sala.html";
+    });
+    document.getElementById("btn-join").addEventListener("click", () => {
+      window.location.href = "./entrar-sala.html";
+    });
+  </script>
 </body>
 </html>
