@@ -67,6 +67,10 @@
       const { error } = await supabase.from('jogadores').insert([{ nome, codigo_sala: salaCode, role }])
       if(error) { alert("Erro ao entrar: " + error.message); return }
 
+      // Salva no sessionStorage antes de redirecionar → sobrevive a refreshes
+      sessionStorage.setItem("impostor_sala", salaCode);
+      sessionStorage.setItem("impostor_nome", nome);
+
       window.location.href = `jogo.html?codigo=${salaCode}&nome=${encodeURIComponent(nome)}`
     })
   </script>

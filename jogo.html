@@ -14,7 +14,7 @@
     <div class="w-full bg-gray-800 p-8 rounded-2xl shadow-lg text-center">
       <h1 class="text-3xl font-bold mb-6">Jogo do Impostor 🕵️‍♂️</h1>
       <p id="player-role" class="text-2xl font-semibold mb-6">Carregando...</p>
-      
+
       <div class="space-y-2">
         <button id="restart-btn" class="w-full bg-green-600 hover:bg-green-700 py-3 px-4 rounded-lg font-semibold transition">
           Reiniciar Jogo ♾️
@@ -41,38 +41,75 @@
   <script type="module">
     import { supabase } from './js/supabaseClient.js'
 
-    const params = new URLSearchParams(window.location.search);
-    const salaCode = params.get("codigo");
-    const nome = params.get("nome");
     const roleDisplay = document.getElementById("player-role");
 
-    if(!salaCode || !nome){ alert("Código da sala ou nome inválido!"); window.location.href="index.html" }
+    // Tenta pegar da URL primeiro (navegação normal)
+    const params = new URLSearchParams(window.location.search);
+    let salaCode = params.get("codigo");
+    let nome = params.get("nome");
 
-    async function carregarJogador(){
-      const { data: jogador } = await supabase.from('jogadores').select('*').eq('codigo_sala', salaCode).eq('nome', nome).single()
-      const { data: sala } = await supabase.from('salas').select('*').eq('codigo', salaCode).single()
-      if(!jogador || !sala){ alert("Erro ao carregar jogador"); window.location.href="index.html" }
-
-      roleDisplay.textContent = jogador.role === "impostor" ? "🤫 IMPOSTOR!" : `✏️ Palavra: ${sala.palavra}`
+    // Se não tiver na URL (ex: refresh sem query string), tenta o sessionStorage
+    if (!salaCode || !nome) {
+      salaCode = sessionStorage.getItem("impostor_sala");
+      nome     = sessionStorage.getItem("impostor_nome");
     }
 
-    carregarJogador()
+    // Se veio da URL, salva no sessionStorage para sobreviver a futuros refreshes
+    if (salaCode && nome) {
+      sessionStorage.setItem("impostor_sala", salaCode);
+      sessionStorage.setItem("impostor_nome", nome);
+    }
+
+    // Sem dados de jeito nenhum → volta para o início
+    if (!salaCode || !nome) {
+      alert("Sessão expirada. Voltando ao início.");
+      window.location.href = "index.html";
+    }
+
+    async function carregarJogador() {
+      const { data: jogador } = await supabase
+        .from('jogadores').select('*')
+        .eq('codigo_sala', salaCode).eq('nome', nome).single();
+
+      const { data: sala } = await supabase
+        .from('salas').select('*')
+        .eq('codigo', salaCode).single();
+
+      if (!jogador || !sala) {
+        alert("Sala não encontrada ou expirada. Voltando ao início.");
+        sessionStorage.removeItem("impostor_sala");
+        sessionStorage.removeItem("impostor_nome");
+        window.location.href = "index.html";
+        return;
+      }
+
+      roleDisplay.textContent = jogador.role === "impostor"
+        ? "🤫 IMPOSTOR!"
+        : `✏️ Palavra: ${sala.palavra}`;
+    }
+
+    carregarJogador();
 
     document.getElementById("restart-btn").addEventListener("click", async () => {
       const confirma = confirm("Isso excluirá a sala atual. Tem certeza?");
       if (!confirma) return;
-      
-      await supabase.from('salas').delete().eq('codigo', salaCode)
-      await supabase.from('jogadores').delete().eq('codigo_sala', salaCode)
-      window.location.href = "index.html"
-    })
+
+      await supabase.from('salas').delete().eq('codigo', salaCode);
+      await supabase.from('jogadores').delete().eq('codigo_sala', salaCode);
+
+      sessionStorage.removeItem("impostor_sala");
+      sessionStorage.removeItem("impostor_nome");
+      window.location.href = "index.html";
+    });
 
     document.getElementById("sair-btn").addEventListener("click", async () => {
       const confirma = confirm("Deseja mesmo sair?");
       if (!confirma) return;
 
-      window.location.href = "index.html"
-    })
+      sessionStorage.removeItem("impostor_sala");
+      sessionStorage.removeItem("impostor_nome");
+      window.location.href = "index.html";
+    });
   </script>
 </body>
 </html>
