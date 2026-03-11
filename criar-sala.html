@@ -55,63 +55,25 @@
 <script type="module">
   import { supabase } from './js/supabaseClient.js';
 
+  const form           = document.getElementById("form-sala");
+  const salaInfo       = document.getElementById("sala-info");
+  const codigoSpan     = document.getElementById("codigo-sala");
+  const listaJogadores = document.getElementById("lista-jogadores");
+  const atualizarBtn   = document.getElementById("atualizar-btn");
+  const excluirBtn     = document.getElementById("excluir-btn");
+
   let salaCode;
   let palavraSala;
-
-  const form = document.getElementById("form-sala");
-  const salaInfo = document.getElementById("sala-info");
-  const codigoSpan = document.getElementById("codigo-sala");
-  const listaJogadores = document.getElementById("lista-jogadores");
-  const atualizarBtn = document.getElementById("atualizar-btn");
-  const excluirBtn = document.getElementById("excluir-btn");
-
-  // ── Restaura lobby se o mestre deu refresh ──────────────────────────────
-  const salvoCode  = sessionStorage.getItem("mestre_sala");
-  const salvoPalavra = sessionStorage.getItem("mestre_palavra");
-
-  if (salvoCode && salvoPalavra) {
-    // Verifica se a sala ainda existe no banco antes de restaurar
-    const { data: salaExiste } = await supabase
-      .from('salas').select('codigo').eq('codigo', salvoCode).single();
-
-    if (salaExiste) {
-      salaCode   = salvoCode;
-      palavraSala = salvoPalavra;
-      mostrarLobby();
-      await atualizarLista();
-    } else {
-      // Sala já foi excluída — limpa o storage e mostra o formulário
-      sessionStorage.removeItem("mestre_sala");
-      sessionStorage.removeItem("mestre_palavra");
-    }
-  }
-  // ────────────────────────────────────────────────────────────────────────
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const palavra   = document.getElementById("Palavra").value.trim();
-    const quantidade = parseInt(document.getElementById("Quantidade").value);
-    const impostores = parseInt(document.getElementById("Impostores").value);
-
-    salaCode    = Math.random().toString(36).substring(2, 6).toUpperCase();
-    palavraSala = palavra;
-
-    const { error } = await supabase.from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }]);
-    if (error) { alert("Erro ao criar sala: " + error.message); return; }
-
-    // Salva no sessionStorage para sobreviver a refreshes
-    sessionStorage.setItem("mestre_sala",    salaCode);
-    sessionStorage.setItem("mestre_palavra", palavraSala);
-
-    mostrarLobby();
-    await atualizarLista();
-  });
 
   function mostrarLobby() {
     form.style.display = "none";
     salaInfo.classList.remove("hidden");
     codigoSpan.textContent = salaCode;
+  }
+
+  function mostrarForm() {
+    salaInfo.classList.add("hidden");
+    form.style.display = "";
   }
 
   async function atualizarLista() {
@@ -126,14 +88,35 @@
     listaJogadores.innerHTML = '';
     data.forEach(jogador => {
       const li = document.createElement("li");
-      if (jogador.role === "impostor") {
-        li.innerHTML = `${jogador.nome} - <span class="text-red-500 font-bold">IMPOSTOR</span>`;
-      } else {
-        li.innerHTML = `${jogador.nome} - <span class="text-blue-400 font-semibold">${palavraSala}</span>`;
-      }
+      li.innerHTML = jogador.role === "impostor"
+        ? `${jogador.nome} - <span class="text-red-500 font-bold">IMPOSTOR</span>`
+        : `${jogador.nome} - <span class="text-blue-400 font-semibold">${palavraSala}</span>`;
       listaJogadores.appendChild(li);
     });
   }
+
+  // Submit sempre registrado — funciona tanto na criação inicial
+  // quanto se o mestre excluir e quiser criar uma nova sala na mesma aba
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const palavra    = document.getElementById("Palavra").value.trim();
+    const quantidade = parseInt(document.getElementById("Quantidade").value);
+    const impostores = parseInt(document.getElementById("Impostores").value);
+
+    salaCode    = Math.random().toString(36).substring(2, 6).toUpperCase();
+    palavraSala = palavra;
+
+    const { error } = await supabase
+      .from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }]);
+    if (error) { alert("Erro ao criar sala: " + error.message); return; }
+
+    sessionStorage.setItem("mestre_sala",    salaCode);
+    sessionStorage.setItem("mestre_palavra", palavraSala);
+
+    mostrarLobby();
+    await atualizarLista();
+  });
 
   atualizarBtn.addEventListener("click", atualizarLista);
 
@@ -145,13 +128,37 @@
     await supabase.from('jogadores').delete().eq('codigo_sala', salaCode);
     await supabase.from('salas').delete().eq('codigo', salaCode);
 
-    // Limpa o sessionStorage ao excluir
     sessionStorage.removeItem("mestre_sala");
     sessionStorage.removeItem("mestre_palavra");
+    salaCode    = null;
+    palavraSala = null;
 
-    alert("Sala excluída!");
-    window.location.href = "index.html";
+    mostrarForm();
   });
+
+  // Tenta restaurar o lobby se o mestre deu refresh
+  async function init() {
+    const salvoCode    = sessionStorage.getItem("mestre_sala");
+    const salvoPalavra = sessionStorage.getItem("mestre_palavra");
+
+    if (!salvoCode || !salvoPalavra) return;
+
+    const { data: salaExiste } = await supabase
+      .from('salas').select('codigo').eq('codigo', salvoCode).single();
+
+    if (salaExiste) {
+      salaCode    = salvoCode;
+      palavraSala = salvoPalavra;
+      mostrarLobby();
+      await atualizarLista();
+    } else {
+      // Sala sumiu do banco — limpa e mostra o formulário
+      sessionStorage.removeItem("mestre_sala");
+      sessionStorage.removeItem("mestre_palavra");
+    }
+  }
+
+  init();
 </script>
 
 </body>
