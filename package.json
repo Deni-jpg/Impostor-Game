@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Deni-jpg/Impostor-Game#readme",
   "dependencies": {
+    "@dynatrace/openkit-js": "^4.2.0",
     "@supabase/supabase-js": "^2.97.0",
     "vite": "^7.3.1"
   }
