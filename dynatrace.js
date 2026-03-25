@@ -8,6 +8,7 @@ const openKit = new OpenKitBuilder(
 
 const session = openKit.createSession();
 
+
 // Regista a página atual
 const pageName = document.title || window.location.pathname;
 const action = session.enterAction(pageName);
