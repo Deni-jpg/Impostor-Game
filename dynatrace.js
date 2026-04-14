@@ -1,8 +1,8 @@
 import { OpenKitBuilder } from '@dynatrace/openkit-js';
 
 const openKit = new OpenKitBuilder(
-  'https://bf77899qux.bf.dynatrace.com/mbeacon',
-  'eb2e0f6a-d073-4c00-8d1f-a29513bc2276',
+  'https://bf39627nnv.bf.dynatrace.com/mbeacon',
+  '36cdde23-5da0-47a3-972a-98ff316672ce',
   String(Date.now()) // ID único por sessão
 ).build();
 
