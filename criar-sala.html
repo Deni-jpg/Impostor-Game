@@ -6,15 +6,15 @@
   <title>Criar Sala - Jogo do Impostor</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2210 0 100 100%22><text y=%22.90em%22 font-size=%2290%22>🕵</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <script type="module" src="dynatrace.js"></script>
+  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4598537233275211" crossorigin="anonymous"></script>
+
   <script>
   (function () {
     var webSdkScript = document.createElement("script");
-
-    // fetch the latest 2.x.x version of the Web-SDK from the CDN
-    webSdkScript.src =
-      "https://unpkg.com/@grafana/faro-web-sdk@2/dist/bundle/faro-web-sdk.iife.js";
+    webSdkScript.src = "https://unpkg.com/@grafana/faro-web-sdk@2/dist/bundle/faro-web-sdk.iife.js";
 
     webSdkScript.onload = () => {
       window.GrafanaFaroWebSdk.initializeFaro({
@@ -24,35 +24,29 @@
           version: "1.0.0",
           environment: "production",
         },
-        
       });
 
-
-      // Load instrumentations at the onLoad event of the web-SDK and after the above configuration.
-      // This is important because we need to ensure that the Web-SDK has been loaded and initialized before we add further instruments!
       var webTracingScript = document.createElement("script");
+      webTracingScript.src = "https://unpkg.com/@grafana/faro-web-tracing@2/dist/bundle/faro-web-tracing.iife.js";
 
-      // fetch the latest 2.x.x version of the Web Tracing package from the CDN
-      webTracingScript.src =
-        "https://unpkg.com/@grafana/faro-web-tracing@2/dist/bundle/faro-web-tracing.iife.js";
-
-      // Initialize, configure (if necessary) and add the the new instrumentation to the already loaded and configured Web-SDK.
       webTracingScript.onload = () => {
         window.GrafanaFaroWebSdk.faro.instrumentations.add(
           new window.GrafanaFaroWebTracing.TracingInstrumentation()
         );
       };
-
-      // Append the Web Tracing script script tag to the HTML page
       document.head.appendChild(webTracingScript);
     };
-
-    // Append the Web-SDK script script tag to the HTML page
     document.head.appendChild(webSdkScript);
   })();
-</script>
+  </script>
 
+  <script type="module">
+    import { initializeOpenTelemetry, otelUtils } from './js/opentelemetry-init.js';
+    initializeOpenTelemetry();
+    window.otelUtils = otelUtils; // Exporta para o script de baixo
+  </script>
 </head>
+
 <body class="bg-gray-900 text-gray-100 flex flex-col min-h-[100dvh]">
 
 <main class="flex-grow flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 py-8">
@@ -123,7 +117,12 @@
     if (!salaCode) return;
     const { data, error } = await supabase
       .from('jogadores').select('*').eq('codigo_sala', salaCode).order('id', { ascending: true });
-    if (error) { console.log(error); return; }
+    if (error) { 
+      console.log(error); 
+      // Enviando erro para o seu Docker Local
+      window.otelUtils.recordError(error, { context: 'atualizar_lista' });
+      return; 
+    }
 
     listaJogadores.innerHTML = '';
     data.forEach(jogador => {
@@ -144,8 +143,19 @@
     salaCode    = Math.random().toString(36).substring(2, 6).toUpperCase();
     palavraSala = palavra;
 
+    // Criando a sala no Supabase
     const { error } = await supabase.from('salas').insert([{ codigo: salaCode, palavra, quantidade, impostores }]);
-    if (error) { alert("Erro ao criar sala: " + error.message); return; }
+    
+    if (error) { 
+      alert("Erro ao criar sala: " + error.message); 
+      // LOG LOCAL NO SEU DOCKER
+      window.otelUtils.recordError(error, { action: 'create_room' });
+      return; 
+    }
+
+    // MANDANDO INFORMAÇÃO PRO SEU DOCKER LOCAL (Prometheus e Loki)
+    window.otelUtils.incrementCounter('game_rooms_created_total');
+    window.otelUtils.recordGameEvent('sala_criada', { codigo: salaCode });
 
     sessionStorage.setItem("mestre_sala",    salaCode);
     sessionStorage.setItem("mestre_palavra", palavraSala);
@@ -163,6 +173,9 @@
 
     await supabase.from('jogadores').delete().eq('codigo_sala', salaCode);
     await supabase.from('salas').delete().eq('codigo', salaCode);
+
+    // Métrica de exclusão no Prometheus local
+    window.otelUtils.incrementCounter('game_rooms_deleted_total');
 
     sessionStorage.removeItem("mestre_sala");
     sessionStorage.removeItem("mestre_palavra");
